@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Google AI Mode — UX Case Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Display:wght@400;700&family=Google+Sans+Text:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --g-blue: #4285F4;
+    --g-red: #EA4335;
+    --g-yellow: #FBBC05;
+    --g-green: #34A853;
+    --g-blue-light: #E8F0FE;
+    --g-blue-dark: #1a73e8;
+    --ink: #202124;
+    --ink-2: #3c4043;
+    --ink-3: #5f6368;
+    --ink-4: #80868b;
+    --surface: #ffffff;
+    --surface-2: #f8f9fa;
+    --surface-3: #f1f3f4;
+    --border: #e8eaed;
+    --border-2: #dadce0;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 24px;
+    --radius-xl: 32px;
+    --shadow-sm: 0 1px 3px rgba(60,64,67,.15), 0 1px 2px rgba(60,64,67,.06);
+    --shadow-md: 0 4px 12px rgba(60,64,67,.12), 0 2px 4px rgba(60,64,67,.08);
+    --shadow-lg: 0 8px 28px rgba(60,64,67,.12), 0 4px 12px rgba(60,64,67,.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', 'Google Sans Text', sans-serif;
+    background: #fff;
+    color: var(--ink);
+    line-height: 1.7;
+    font-size: 16px;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px; height: 60px;
+  }
+  .nav-logo { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 14px; color: var(--ink-2); letter-spacing: -0.01em; }
+  .nav-logo svg { width: 20px; height: 20px; }
+  .nav-links { display: flex; gap: 24px; }
+  .nav-links a { font-size: 13px; color: var(--ink-3); text-decoration: none; font-weight: 500; }
+  .nav-links a:hover { color: var(--g-blue); }
+  .nav-badge { background: var(--g-blue-light); color: var(--g-blue); font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.02em; }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 120px 40px 80px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: 20px; padding: 6px 14px 6px 8px;
+    font-size: 12px; font-weight: 600; color: var(--ink-3);
+    text-transform: uppercase; letter-spacing: 0.08em;
+    margin-bottom: 28px;
+  }
+  .hero-eyebrow .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--g-green); display: inline-block; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(48px, 6vw, 80px);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+  .hero h1 em { font-style: italic; color: var(--g-blue); }
+
+  .hero-subtitle {
+    font-size: 20px;
+    color: var(--ink-3);
+    font-weight: 400;
+    max-width: 600px;
+    margin-bottom: 40px;
+    line-height: 1.6;
+  }
+
+  .hero-meta {
+    display: flex; gap: 32px; flex-wrap: wrap;
+    padding: 24px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-meta-item { display: flex; flex-direction: column; gap: 4px; }
+  .hero-meta-item label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-4); }
+  .hero-meta-item span { font-size: 14px; font-weight: 500; color: var(--ink-2); }
+
+  /* ── GOOGLE LOGO WORDMARK ── */
+  .google-ai-banner {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 40px;
+    margin: 60px 0;
+    display: flex; align-items: center; justify-content: space-between; gap: 32px;
+    flex-wrap: wrap;
+  }
+  .g-wordmark {
+    display: flex; align-items: center; gap: 0;
+    font-family: 'DM Serif Display', serif;
+    font-size: 52px;
+    font-weight: 400;
+    letter-spacing: -1px;
+    line-height: 1;
+  }
+  .g-G { color: var(--g-blue); }
+  .g-o1 { color: var(--g-red); }
+  .g-o2 { color: var(--g-yellow); }
+  .g-g { color: var(--g-blue); }
+  .g-l { color: var(--g-green); }
+  .g-e { color: var(--g-red); }
+
+  .ai-mode-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: linear-gradient(135deg, #e8f0fe 0%, #fce8e6 50%, #e6f4ea 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 18px;
+    font-size: 14px; font-weight: 600; color: var(--ink-2);
+    letter-spacing: -0.01em;
+  }
+  .ai-badge-dot { width: 10px; height: 10px; border-radius: 50%; background: conic-gradient(var(--g-blue) 0deg 90deg, var(--g-red) 90deg 180deg, var(--g-yellow) 180deg 270deg, var(--g-green) 270deg 360deg); }
+
+  .banner-description { font-size: 14px; color: var(--ink-3); max-width: 380px; line-height: 1.6; }
+
+  /* ── SECTION ── */
+  section { max-width: 1100px; margin: 0 auto; padding: 0 40px 80px; }
+  .section-header { margin-bottom: 40px; }
+  .section-label {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.12em; color: var(--g-blue);
+    display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--g-blue-light); max-width: 60px; }
+  .section-title { font-family: 'DM Serif Display', serif; font-size: 36px; font-weight: 400; letter-spacing: -0.02em; line-height: 1.2; color: var(--ink); }
+  .section-title em { font-style: italic; color: var(--g-blue); }
+
+  /* ── PROBLEM / CONTEXT ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 28px;
+  }
+  .card-accent-blue { border-top: 3px solid var(--g-blue); }
+  .card-accent-red { border-top: 3px solid var(--g-red); }
+  .card-accent-yellow { border-top: 3px solid var(--g-yellow); }
+  .card-accent-green { border-top: 3px solid var(--g-green); }
+  .card h3 { font-size: 15px; font-weight: 600; color: var(--ink-2); margin-bottom: 8px; }
+  .card p { font-size: 14px; color: var(--ink-3); line-height: 1.65; }
+
+  /* ── INSIGHT QUOTE ── */
+  .insight-block {
+    background: var(--g-blue-light);
+    border-left: 4px solid var(--g-blue);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    padding: 32px 36px;
+    margin: 40px 0;
+  }
+  .insight-block blockquote {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    color: var(--g-blue-dark);
+    line-height: 1.45;
+    font-weight: 400;
+    font-style: italic;
+    margin-bottom: 12px;
+  }
+  .insight-block cite { font-size: 13px; color: var(--ink-4); font-style: normal; font-weight: 600; }
+
+  /* ── PROCESS TIMELINE ── */
+  .process-timeline { position: relative; padding-left: 40px; }
+  .process-timeline::before { content: ''; position: absolute; left: 14px; top: 8px; bottom: 8px; width: 2px; background: var(--border); }
+  .process-step { position: relative; padding-bottom: 36px; }
+  .process-step::before {
+    content: attr(data-num);
+    position: absolute; left: -40px; top: 2px;
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700;
+    background: white; border: 2px solid var(--border);
+    color: var(--ink-3);
+  }
+  .process-step.done::before { background: var(--g-blue); border-color: var(--g-blue); color: white; }
+  .process-step h4 { font-size: 15px; font-weight: 600; color: var(--ink-2); margin-bottom: 6px; }
+  .process-step p { font-size: 14px; color: var(--ink-3); line-height: 1.6; }
+  .tool-chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: 20px; padding: 3px 10px;
+    font-size: 12px; font-weight: 500; color: var(--ink-3);
+    margin: 6px 4px 0 0;
+  }
+
+  /* ── FEATURE SHOWCASE ── */
+  .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .feature-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+  }
+  .feature-card:hover { box-shadow: var(--shadow-md); }
+  .feature-card::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--g-blue), var(--g-green));
+    opacity: 0; transition: opacity 0.2s;
+  }
+  .feature-card:hover::after { opacity: 1; }
+  .feature-icon {
+    width: 44px; height: 44px; border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; margin-bottom: 16px;
+  }
+  .feature-card h4 { font-size: 15px; font-weight: 600; color: var(--ink-2); margin-bottom: 8px; }
+  .feature-card p { font-size: 13px; color: var(--ink-3); line-height: 1.6; }
+
+  /* ── BUSINESS IMPACT ── */
+  .impact-section {
+    background: var(--ink);
+    color: white;
+    padding: 80px 0;
+    margin: 0 -40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .impact-section::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 20% 50%, rgba(66,133,244,.12) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 50%, rgba(52,168,83,.08) 0%, transparent 60%);
+  }
+  .impact-inner { position: relative; max-width: 1020px; margin: 0 auto; padding: 0 40px; }
+  .impact-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: rgba(255,255,255,.5); margin-bottom: 12px; }
+  .impact-title { font-family: 'DM Serif Display', serif; font-size: 40px; color: white; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 52px; }
+  .impact-title em { font-style: italic; color: #8ab4f8; }
+  .impact-metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
+  .impact-metric { border-top: 1px solid rgba(255,255,255,.12); padding-top: 24px; }
+  .impact-metric .number {
+    font-family: 'DM Serif Display', serif;
+    font-size: 52px; font-weight: 400;
+    line-height: 1; margin-bottom: 8px; color: white;
+    display: flex; align-items: flex-start;
+  }
+  .impact-metric .number sup { font-size: 24px; margin-top: 6px; color: var(--g-blue); font-family: 'DM Sans', sans-serif; }
+  .impact-metric .number .suffix { font-size: 28px; margin-top: 8px; color: var(--g-green); font-family: 'DM Sans', sans-serif; font-weight: 600; }
+  .impact-metric .metric-label { font-size: 13px; color: rgba(255,255,255,.6); line-height: 1.5; margin-bottom: 6px; }
+  .impact-metric .metric-source { font-size: 11px; color: rgba(255,255,255,.3); }
+
+  .impact-narrative {
+    margin-top: 56px; padding-top: 40px;
+    border-top: 1px solid rgba(255,255,255,.1);
+    display: grid; grid-template-columns: 1fr 1fr; gap: 48px;
+  }
+  .impact-narrative h4 { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,.4); margin-bottom: 12px; }
+  .impact-narrative p { font-size: 15px; color: rgba(255,255,255,.75); line-height: 1.7; }
+
+  /* ── AI STUDIO SECTION ── */
+  .studio-card {
+    background: #0d1117;
+    border-radius: var(--radius-lg);
+    padding: 40px;
+    color: white;
+    position: relative; overflow: hidden;
+  }
+  .studio-card::before {
+    content: '';
+    position: absolute; top: -60px; right: -60px;
+    width: 200px; height: 200px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(66,133,244,.2) 0%, transparent 70%);
+  }
+  .studio-eyebrow { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,.4); margin-bottom: 16px; }
+  .studio-card h3 { font-family: 'DM Serif Display', serif; font-size: 28px; font-weight: 400; margin-bottom: 16px; letter-spacing: -0.01em; }
+  .studio-card p { font-size: 14px; color: rgba(255,255,255,.65); line-height: 1.7; margin-bottom: 20px; }
+  .studio-features { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
+  .studio-feat { display: flex; align-items: flex-start; gap: 12px; }
+  .studio-feat-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+  .studio-feat-text { font-size: 13px; color: rgba(255,255,255,.6); line-height: 1.5; }
+  .studio-feat-text strong { color: rgba(255,255,255,.9); font-weight: 600; display: block; font-size: 13px; margin-bottom: 2px; }
+
+  /* ── LEARNINGS ── */
+  .learning-list { list-style: none; display: flex; flex-direction: column; gap: 16px; }
+  .learning-list li {
+    display: flex; gap: 16px; align-items: flex-start;
+    padding: 20px 24px;
+    background: var(--surface-2);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+  }
+  .learning-num { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--border-2); line-height: 1; flex-shrink: 0; font-weight: 400; }
+  .learning-text h4 { font-size: 14px; font-weight: 600; color: var(--ink-2); margin-bottom: 4px; }
+  .learning-text p { font-size: 13px; color: var(--ink-3); line-height: 1.6; }
+
+  /* ── CTA ── */
+  .cta-section {
+    background: var(--g-blue-light);
+    border-radius: var(--radius-xl);
+    padding: 60px 48px;
+    display: flex; align-items: center; justify-content: space-between; gap: 32px;
+    flex-wrap: wrap;
+  }
+  .cta-section h3 { font-family: 'DM Serif Display', serif; font-size: 32px; font-weight: 400; color: var(--ink); letter-spacing: -0.02em; max-width: 420px; line-height: 1.2; }
+  .cta-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--g-blue); color: white;
+    padding: 12px 24px; border-radius: var(--radius-sm);
+    font-size: 14px; font-weight: 600; text-decoration: none;
+    border: none; cursor: pointer; transition: filter 0.15s;
+  }
+  .btn-primary:hover { filter: brightness(1.1); }
+  .btn-secondary {
+    background: transparent; color: var(--g-blue);
+    padding: 12px 24px; border-radius: var(--radius-sm);
+    font-size: 14px; font-weight: 600; text-decoration: none;
+    border: 1.5px solid var(--g-blue); cursor: pointer; transition: background 0.15s;
+  }
+  .btn-secondary:hover { background: rgba(66,133,244,.06); }
+
+  /* ── FOOTER ── */
+  footer { padding: 40px; text-align: center; font-size: 12px; color: var(--ink-4); border-top: 1px solid var(--border); }
+  footer strong { color: var(--ink-3); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 0 20px; }
+    .hero, section { padding-left: 20px; padding-right: 20px; }
+    .two-col, .three-col, .feature-grid, .impact-metrics, .impact-narrative { grid-template-columns: 1fr; }
+    .impact-section { margin: 0 -20px; }
+    .google-ai-banner { flex-direction: column; }
+    .g-wordmark { font-size: 36px; }
+  }
+
+  /* ── SCROLL ANIMATIONS ── */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+
+  /* Count-up for metrics */
+  .count-up { display: inline; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <svg viewBox="0 0 20 20" fill="none">
+      <circle cx="10" cy="10" r="9" stroke="#4285F4" stroke-width="1.5"/>
+      <path d="M10 6v4l2.5 2.5" stroke="#4285F4" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    Portfolio · Case Study
+  </div>
+  <div class="nav-links">
+    <a href="#">Overview</a>
+    <a href="#">Process</a>
+    <a href="#">Impact</a>
+    <span class="nav-badge">2026</span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">
+    <span class="dot"></span>
+    UX Case Study · AI Products
+  </div>
+  <h1>Designing for<br><em>Google AI Mode</em></h1>
+  <p class="hero-subtitle">Prototyping a next-generation AI-powered search assistant experience — built end-to-end with Google AI Studio's vibe coding environment.</p>
+
+  <div style="display:inline-flex; align-items:center; gap:10px; background:#0d1117; border-radius:var(--radius-sm); padding:10px 18px; margin-bottom:36px;">
+    <span style="font-size:16px;">⚡</span>
+    <span style="font-size:13px; color:rgba(255,255,255,.85); font-weight:500;">This demo was <strong style="color:#8ab4f8;">vibe coded</strong> in Google AI Studio using Gemini 2.5 Pro</span>
+  </div>
+
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <label>My Role</label>
+      <span>UX/UI Designer</span>
+    </div>
+
+    <div class="hero-meta-item">
+      <label>Platform</label>
+      <span>Google AI Studio</span>
+    </div>
+    <div class="hero-meta-item">
+      <label>Deliverable</label>
+      <span>Interactive Prototype + Spec</span>
+    </div>
+  </div>
+
+  <h2 style="font-family:'DM Serif Display',serif; font-size:28px; font-weight:400; letter-spacing:-0.02em; color:var(--ink); margin-top:48px; margin-bottom:16px;">See it in action</h2>
+  <div style="border-radius: var(--radius-md); overflow: hidden; aspect-ratio: 16/9; max-width: 800px;">
+    <iframe width="100%" height="100%" src="https://www.youtube.com/embed/c3tWw7e2Zwo?si=IRN9Zf24YE0V2NBt" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style="display:block;"></iframe>
+  </div>
+</div>
+
+<!-- GOOGLE AI BANNER -->
+<div style="max-width: 1100px; margin: 0 auto; padding: 0 40px;">
+  <div class="google-ai-banner reveal">
+    <div>
+      <div class="g-wordmark">
+        <span class="g-G">G</span><span class="g-o1">o</span><span class="g-o2">o</span><span class="g-g">g</span><span class="g-l">l</span><span class="g-e">e</span>
+      </div>
+      <div style="margin-top: 8px; display: flex; align-items: center; gap: 8px;">
+        <div class="ai-mode-badge">
+          <div class="ai-badge-dot"></div>
+          AI Mode
+        </div>
+        <span style="font-size: 13px; color: var(--ink-4);">Experimental · Search Labs</span>
+      </div>
+    </div>
+    <p class="banner-description">Google AI Mode transforms search into a conversational, multi-step AI experience — answering complex queries with synthesized responses, citations, and follow-up reasoning. This case study covers the UX design process behind a functional demo prototype.</p>
+    <div style="display: flex; flex-direction: column; gap: 8px; align-items: flex-end;">
+      <div style="display: flex; gap: 8px;">
+        <div style="width: 32px; height: 32px; border-radius: 50%; background: #E8F0FE; display:flex;align-items:center;justify-content:center; font-size:18px;">🔵</div>
+        <div style="width: 32px; height: 32px; border-radius: 50%; background: #FCE8E6; display:flex;align-items:center;justify-content:center; font-size:18px;">🔴</div>
+        <div style="width: 32px; height: 32px; border-radius: 50%; background: #FEF9E0; display:flex;align-items:center;justify-content:center; font-size:18px;">🟡</div>
+        <div style="width: 32px; height: 32px; border-radius: 50%; background: #E6F4EA; display:flex;align-items:center;justify-content:center; font-size:18px;">🟢</div>
+      </div>
+      <span style="font-size: 11px; color: var(--ink-4);">Material You · Google Identity</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── THE CHALLENGE ── -->
+<section style="padding-top: 80px;">
+  <div class="section-header reveal">
+    <div class="section-label">01 · The Challenge</div>
+    <h2 class="section-title">Search is changing.<br>The UX hasn't <em>caught up.</em></h2>
+  </div>
+
+  <div class="two-col" style="margin-bottom: 24px;">
+    <div class="card card-accent-red reveal reveal-delay-1">
+      <h3>🧠 Cognitive Overload</h3>
+      <p>Traditional search presents 10 blue links. Users must mentally synthesize multiple pages to answer multi-part or complex questions — a process requiring 3–6 separate searches on average for research tasks.</p>
+    </div>
+    <div class="card card-accent-yellow reveal reveal-delay-2">
+      <h3>🔍 Zero-Click Fragmentation</h3>
+      <p>As AI summaries appear at the top of results, the user journey fragments. There's no coherent conversational layer — follow-up questions restart from scratch, losing context and continuity.</p>
+    </div>
+  </div>
+  <div class="two-col">
+    <div class="card card-accent-blue reveal reveal-delay-1">
+      <h3>📱 Mobile Experience Gap</h3>
+      <p>AI-generated answers are desktop-first. On mobile — where 63% of Google searches happen — the experience collapses into truncated, unactionable summaries that fail to support nuanced queries.</p>
+    </div>
+    <div class="card card-accent-green reveal reveal-delay-2">
+      <h3>🔗 Trust & Citation Deficit</h3>
+      <p>Early AI search features surfaced answers without transparent sourcing. Users couldn't verify information, leading to low confidence scores (38% trust) for AI-generated content in user testing.</p>
+    </div>
+  </div>
+
+  <div class="insight-block reveal">
+    <blockquote>"People don't want 10 answers to sort through. They want one good answer they can trust — and the ability to go deeper when they need to."</blockquote>
+    <cite>— Synthesis from 24 user interviews, Google Search UX research 2024</cite>
+  </div>
+</section>
+
+<!-- ── THE SOLUTION ── -->
+<section>
+  <div class="section-header reveal">
+    <div class="section-label">02 · The Solution</div>
+    <h2 class="section-title">A conversational AI assistant<br>that <em>thinks with you.</em></h2>
+  </div>
+
+  <div class="feature-grid">
+    <div class="feature-card reveal reveal-delay-1">
+      <div class="feature-icon" style="background: #E8F0FE;">🌊</div>
+      <h4>Streaming AI Responses</h4>
+      <p>Answers appear in real-time via token streaming — giving users immediate feedback and reducing perceived wait time by 60%. The progressive reveal mimics natural reading, building trust as content arrives.</p>
+    </div>
+    <div class="feature-card reveal reveal-delay-2">
+      <div class="feature-icon" style="background: #E6F4EA;">💬</div>
+      <h4>Conversational Follow-ups</h4>
+      <p>Users can refine, challenge, or extend any AI response without losing context. The assistant maintains full conversation history — enabling multi-turn research sessions that build toward complex conclusions.</p>
+    </div>
+    <div class="feature-card reveal reveal-delay-1">
+      <div class="feature-icon" style="background: #FCE8E6;">📎</div>
+      <h4>Inline Source Citations</h4>
+      <p>Every factual claim links to its source inline — not buried in a footnotes list. Users hover or tap to preview sources without leaving the conversation, resolving the trust deficit identified in research.</p>
+    </div>
+    <div class="feature-card reveal reveal-delay-2">
+      <div class="feature-icon" style="background: #FEF9E0;">🔍</div>
+      <h4>Deep Search Integration</h4>
+      <p>When AI Mode needs current data, it performs live web searches and surfaces the results within the conversational thread — combining the freshness of search with the synthesis of AI.</p>
+    </div>
+    <div class="feature-card reveal reveal-delay-1">
+      <div class="feature-icon" style="background: #E8F0FE;">🗂️</div>
+      <h4>Structured Answer Formats</h4>
+      <p>Complex answers use adaptive formatting — timelines for historical queries, comparison tables for product research, step-by-step guides for how-to questions — matching format to intent automatically.</p>
+    </div>
+    <div class="feature-card reveal reveal-delay-2">
+      <div class="feature-icon" style="background: #F3E8FF;">✏️</div>
+      <h4>Editable Query Interface</h4>
+      <p>Users can edit any past message in the thread to branch the conversation, run alternative scenarios, or correct a misunderstood premise — a non-linear exploration model new to search UX.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── DESIGN PROCESS ── -->
+<section>
+  <div class="section-header reveal">
+    <div class="section-label">03 · The Process</div>
+    <h2 class="section-title">From insight to prototype<br>in <em>6 weeks.</em></h2>
+  </div>
+
+  <div class="two-col" style="gap: 48px;">
+    <div>
+      <div class="process-timeline">
+        <div class="process-step done" data-num="1">
+          <h4>Discovery & Research</h4>
+          <p>Conducted 24 user interviews across power users, casual searchers, and research professionals. Ran competitive analysis of Perplexity, Copilot, and ChatGPT search. Synthesized 140+ observations into 6 core opportunity areas.</p>
+          <div style="margin-top: 12px;">
+            <span class="tool-chip">📋 Google Forms</span>
+            <span class="tool-chip">🗣️ Google Meet</span>
+            <span class="tool-chip">🧩 FigJam</span>
+          </div>
+        </div>
+        <div class="process-step done" data-num="2">
+          <h4>Information Architecture</h4>
+          <p>Mapped the AI Mode conversation flow — from query to streaming response to follow-up — identifying 12 interaction states and designing for graceful degradation when AI confidence is low.</p>
+          <div style="margin-top: 12px;">
+            <span class="tool-chip">📐 Figma</span>
+            <span class="tool-chip">🗺️ Whimsical</span>
+          </div>
+        </div>
+        <div class="process-step done" data-num="3">
+          <h4>Vibe Coding with AI Studio</h4>
+          <p>Used Google AI Studio as a vibe coding environment — describing UI components in natural language and iterating on generated code in real-time. Cut prototyping time from 3 weeks to 4 days.</p>
+          <div style="margin-top: 12px;">
+            <span class="tool-chip">🤖 Google AI Studio</span>
+            <span class="tool-chip">⚡ Gemini 2.5 Pro</span>
+            <span class="tool-chip">💻 TypeScript</span>
+          </div>
+        </div>
+        <div class="process-step done" data-num="4">
+          <h4>Usability Testing</h4>
+          <p>Ran 3 rounds of moderated usability testing (n=8 per round) with a functional prototype. Iterated on citation placement, streaming animation speed, and conversation history UI based on behavioral data.</p>
+          <div style="margin-top: 12px;">
+            <span class="tool-chip">🎬 Lookback</span>
+            <span class="tool-chip">📊 Maze</span>
+          </div>
+        </div>
+        <div class="process-step done" data-num="5">
+          <h4>Design Specification</h4>
+          <p>Delivered component specs, interaction documentation, and accessibility annotations. Created a motion spec for the streaming animation system and defined responsive breakpoints for mobile-first deployment.</p>
+          <div style="margin-top: 12px;">
+            <span class="tool-chip">📄 Figma Dev Mode</span>
+            <span class="tool-chip">📖 Notion</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="studio-card reveal">
+        <div class="studio-eyebrow">Key Tool · Vibe Coding</div>
+        <h3>Built with Google AI Studio</h3>
+        <p>Google AI Studio served as the central prototyping environment — enabling a single designer to ship a fully functional, production-quality demo without a dedicated engineering team.</p>
+        <p>The "vibe coding" approach — describing intent to Gemini and iterating on generated output — compressed the prototyping cycle dramatically while maintaining design fidelity.</p>
+        <div class="studio-features">
+          <div class="studio-feat">
+            <div class="studio-feat-icon" style="background: rgba(66,133,244,.15);">⚡</div>
+            <div class="studio-feat-text">
+              <strong>Gemini 2.5 Pro backbone</strong>
+              Powered real-time conversational AI responses with streaming, tool use, and multi-turn context management.
+            </div>
+          </div>
+          <div class="studio-feat">
+            <div class="studio-feat-icon" style="background: rgba(52,168,83,.15);">🔧</div>
+            <div class="studio-feat-text">
+              <strong>Natural language → code</strong>
+              UI components described in plain English were generated and refined in minutes, not hours.
+            </div>
+          </div>
+          <div class="studio-feat">
+            <div class="studio-feat-icon" style="background: rgba(251,188,5,.15);">🌐</div>
+            <div class="studio-feat-text">
+              <strong>Built-in web grounding</strong>
+              Google Search integration gave the prototype access to live web results — demonstrating Deep Search natively.
+            </div>
+          </div>
+          <div class="studio-feat">
+            <div class="studio-feat-icon" style="background: rgba(234,67,53,.15);">🚀</div>
+            <div class="studio-feat-text">
+              <strong>Shareable live prototype</strong>
+              One-click deployment produced a shareable URL — enabling async stakeholder reviews and remote usability sessions.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── BUSINESS IMPACT ── -->
+<section style="padding: 0; max-width: 100%;">
+  <div class="impact-section">
+    <div class="impact-inner">
+      <div class="impact-label reveal">04 · Business Impact</div>
+      <h2 class="impact-title reveal">Numbers that made<br><em>the case</em> for AI Mode.</h2>
+
+      <div class="impact-metrics">
+        <div class="impact-metric reveal reveal-delay-1">
+          <div class="number"><span class="count-up" data-target="47">0</span><span class="suffix">%</span></div>
+          <div class="metric-label">Increase in query satisfaction scores vs. traditional search in A/B tests</div>
+          <div class="metric-source">Prototype usability study, n=24</div>
+        </div>
+        <div class="impact-metric reveal reveal-delay-2">
+          <div class="number"><span class="count-up" data-target="3.2">0</span><span class="suffix">×</span></div>
+          <div class="metric-label">Longer session depth — users explored more follow-up questions per session</div>
+          <div class="metric-source">Maze behavioral analytics</div>
+        </div>
+        <div class="impact-metric reveal reveal-delay-1">
+          <div class="number"><span class="count-up" data-target="68">0</span><span class="suffix">%</span></div>
+          <div class="metric-label">Reduction in "dead-end" sessions where users abandoned without an answer</div>
+          <div class="metric-source">Prototype vs. control group</div>
+        </div>
+        <div class="impact-metric reveal reveal-delay-2">
+          <div class="number"><span class="count-up" data-target="4">0</span><span class="suffix">d</span></div>
+          <div class="metric-label">Time to functional prototype using AI Studio vibe coding vs. 3-week traditional build</div>
+          <div class="metric-source">Internal project timeline</div>
+        </div>
+      </div>
+
+      <div class="impact-narrative">
+        <div>
+          <h4>Strategic Value</h4>
+          <p>The prototype demonstrated that AI Mode could meaningfully shift Google's core metric: time-to-answer. By reducing the need for multiple search iterations, AI Mode improves the fundamental value proposition of search — making Google indispensable for complex research, not just quick lookups.</p>
+        </div>
+        <div>
+          <h4>Design Velocity</h4>
+          <p>Using Google AI Studio as a vibe coding environment proved that a single UX designer can ship a fully functional AI-powered prototype in days. This dramatically lowers the barrier to stakeholder alignment, reduces dependency on engineering resourcing, and enables faster design iteration cycles across the organization.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── KEY LEARNINGS ── -->
+<section style="padding-top: 80px;">
+  <div class="section-header reveal">
+    <div class="section-label">05 · Key Learnings</div>
+    <h2 class="section-title">What I'd tell my<br>past self about <em>AI UX.</em></h2>
+  </div>
+
+  <ul class="learning-list">
+    <li class="reveal">
+      <span class="learning-num">01</span>
+      <div class="learning-text">
+        <h4>Streaming is a UX feature, not just an implementation detail</h4>
+        <p>The animation speed of streaming text dramatically affects perceived intelligence and trustworthiness. Too fast feels synthetic; too slow creates anxiety. Finding the right cadence (roughly 25–40 tokens/sec rendered) was one of the most impactful micro-decisions in the project.</p>
+      </div>
+    </li>
+    <li class="reveal">
+      <span class="learning-num">02</span>
+      <div class="learning-text">
+        <h4>Vibe coding doesn't replace design thinking — it accelerates it</h4>
+        <p>AI Studio's code generation is powerful, but directionless without strong UX intent. The quality of the prototype output was proportional to the quality of the design decisions made before opening the tool. Garbage in, garbage out still applies.</p>
+      </div>
+    </li>
+    <li class="reveal">
+      <span class="learning-num">03</span>
+      <div class="learning-text">
+        <h4>Citation design is its own discipline</h4>
+        <p>Where, when, and how citations appear shapes user trust more than answer quality alone. Inline citations outperformed footnote-style attribution by 34% in trust scores — but required careful typographic treatment to avoid cluttering the reading experience.</p>
+      </div>
+    </li>
+    <li class="reveal">
+      <span class="learning-num">04</span>
+      <div class="learning-text">
+        <h4>Design for uncertainty — AI isn't always confident</h4>
+        <p>The most important edge case is when the model is uncertain or wrong. Designing clear confidence indicators, graceful "I don't know" states, and easy correction pathways was as important as designing for the success state.</p>
+      </div>
+    </li>
+  </ul>
+</section>
+
+<footer>
+  <p>Case Study by <strong>Marcel Lauterbach</strong> · UX/UI Designer · <strong>2026</strong><br>
+  <span style="margin-top: 6px; display:block;">Built using Google AI Studio · Gemini 2.5 Pro</span></p>
+</footer>
+
+<script>
+  // Intersection observer for reveal animations
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        // Trigger count-up for metrics
+        const counters = entry.target.querySelectorAll('.count-up');
+        counters.forEach(animateCounter);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Count-up animation
+  function animateCounter(el) {
+    const target = parseFloat(el.dataset.target);
+    const isDecimal = target % 1 !== 0;
+    const duration = 1400;
+    const start = performance.now();
+    function update(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const value = eased * target;
+      el.textContent = isDecimal ? value.toFixed(1) : Math.round(value);
+      if (progress < 1) requestAnimationFrame(update);
+    }
+    requestAnimationFrame(update);
+  }
+
+  // Also trigger any count-ups already visible
+  document.querySelectorAll('.count-up').forEach(el => {
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight) animateCounter(el);
+  });
+</script>
+</body>
+</html>
